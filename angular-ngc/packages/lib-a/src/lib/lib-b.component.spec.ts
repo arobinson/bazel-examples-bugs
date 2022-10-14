@@ -2,17 +2,21 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { CommonModule } from '@ngc-example/common';
 import { Component } from '@angular/core';
 import { LibAComponent } from './lib-a.component';
+import { By } from '@angular/platform-browser';
 
 @Component({
   selector: 'example-pkg-b',
   template: `
     <strong>
       The library component B! With
+      <span *ngIf="showSpan">SPAN!</span>
       <!-- <example-pkg></example-pkg> -->
     </strong>
   `,
 })
-class LibBComponent {}
+class LibBComponent {
+  showSpan = true;
+}
 
 describe('LibBComponent', () => {
   let component: LibBComponent;
@@ -31,5 +35,10 @@ describe('LibBComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+    const spans = fixture.debugElement.queryAll(By.css('SPAN'));
+    expect(spans.length).withContext('Should have rendered 1 span').toEqual(1);
+    if (spans.length) {
+      expect(spans[0].nativeElement.textContent).withContext('should have the correct contents in the span').toEqual('SPAN!');
+    }
   });
 });
